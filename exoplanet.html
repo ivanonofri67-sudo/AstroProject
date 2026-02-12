@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="fixen" lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AstroProject</title>
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script>
+        // Variabile globale per mantenere lo stato dei parametri (filtri, ordinamento, pagina)
+        window.currentParams = new URLSearchParams();
+
+        async function gestisciNavigazione() {
+            const container = document.getElementById('main-content');
+            if (!container) return;
+
+            let pagina = window.location.hash.replace('#', '');
+            if (!pagina || pagina === "") pagina = 'ultimescoperte';
+
+            try {
+                const risposta = await fetch(`${pagina}.html`);
+                if (!risposta.ok) throw new Error(`File ${pagina}.html non trovato`);
+
+                const html = await risposta.text();
+                container.innerHTML = html;
+
+                // Se siamo nel database, inizializziamo i filtri e carichiamo i dati dal PHP
+                if (pagina === 'databaseAI') {
+                    // Reset parametri al cambio pagina
+                    window.currentParams = new URLSearchParams();
+                    attivaJSfilter(); 
+                    eseguiAggiornamento(1); // Carica la prima pagina di dati
+                }
+
+                // Gestione estetica menu
+                document.querySelectorAll('nav a').forEach(link => {
+                    link.classList.toggle('menu-select', link.getAttribute('href') === `#${pagina}`);
+                });
+
+            } catch (errore) {
+                console.error("Errore AJAX:", errore.message);
+                container.innerHTML = `<h2>Errore di caricamento</h2><p>${errore.message}</p>`;
+            }
+        }
+
+        function attivaOrdinamento() {
+            document.querySelectorAll('.sort-icons').forEach((container, index) => {
+                // Clonazione per pulire vecchi listener
+                const newContainer = container.cloneNode(true);
+                container.parentNode.replaceChild(newContainer, container);
+
+                newContainer.addEventListener('click', function (e) {
+                    const arrow = e.target.closest('.sort-arrow');
+                    if (!arrow) return;
+
+                    const direzione = arrow.classList.contains('up') ? 'ASC' : 'DESC';
+                    const th = this.closest('th');
+                    const colonna = th.getAttribute('data-db-column');
+
+                    window.currentParams.set('sort', colonna);
+                    window.currentParams.set('order', direzione);
+                    
+                    eseguiAggiornamento(1); // Torna a pagina 1 con nuovo ordinamento
+                });
+            });
+        }
+
+        function evidenziaFreccia(colonna, ordine) {
+            document.querySelectorAll('.sort-arrow').forEach(el => el.classList.remove('active'));
+            const th = document.querySelector(`th[data-db-column="${colonna}"]`);
+            if (th) {
+                const classe = (ordine.toUpperCase() === 'ASC') ? '.up' : '.down';
+                const freccia = th.querySelector(classe);
+                if (freccia) freccia.classList.add('active');
+            }
+        }
+
+        async function eseguiAggiornamento(nuovaPaginaIndice = null) {
+            // 1. Raccogli filtri dai componenti UI
+            // Checkbox
+            document.querySelectorAll('.custom-dropdown-filter:not(:has(.select-mode))').forEach((dropdown, index) => {
+                const selected = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked')).map(chk => chk.value);
+                if (selected.length > 0) window.currentParams.set(`filter${index + 1}`, selected.join(','));
+                else window.currentParams.delete(`filter${index + 1}`);
+            });
+
+            // Massa
+            const selectedMassa = document.querySelector('.dropdown-option-filter.selected');
+            if (selectedMassa && selectedMassa.dataset.value) {
+                window.currentParams.set('massa', selectedMassa.dataset.value);
+            }
+
+            // Visualizzazione
+            const mode = document.querySelector('.btn-action.mode.active')?.id === 'btn-extended' ? 'extended' : 'compact';
+            window.currentParams.set('view_mode', mode);
+
+            // Paginazione
+            const limit = document.getElementById('rows-per-page')?.value || '10';
+            window.currentParams.set('limit', limit);
+            if (nuovaPaginaIndice) window.currentParams.set('p', nuovaPaginaIndice);
+
+            try {
+                // CHIAMATA AL PHP
+                const risposta = await fetch(`dati.php?${window.currentParams.toString()}`);
+                if (!risposta.ok) throw new Error("Errore nel caricamento dati");
+                
+                const data = await risposta.json();
+
+                // 2. Popolamento Tabella
+                const tbody = document.querySelector('.glass-table tbody');
+                if (tbody) {
+                    tbody.innerHTML = ''; 
+                    data.rows.forEach(row => {
+                        const tr = document.createElement('tr');
+                        // Modifica qui i campi in base alle colonne del tuo DB
+                        tr.innerHTML = `
+                            <td><span class="planet-name">${row.nome}</span></td>
+                            <td>${row.sistema}</td>
+                            <td>${row.massa}</td>
+                            <td>${row.scoperta}</td>
+                            <td><span class="status-badge">${row.stato}</span></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+
+                // 3. Aggiornamento UI Paginazione
+                const totalInput = document.getElementById('total-rows-db');
+                if (totalInput) totalInput.value = data.total;
+                
+                aggiornaControlliPaginazione(parseInt(window.currentParams.get('p')) || 1, data.total);
+                
+                // 4. Ripristino icone ordinamento
+                attivaOrdinamento();
+                if (window.currentParams.has('sort')) {
+                    evidenziaFreccia(window.currentParams.get('sort'), window.currentParams.get('order'));
+                }
+
+            } catch (err) {
+                console.error("Errore aggiornamento:", err);
+            }
+        }
+
+        function aggiornaControlliPaginazione(currentPage, totalRows) {
+            const limit = parseInt(document.getElementById('rows-per-page')?.value) || 10;
+            const totalPages = Math.ceil(totalRows / limit) || 1;
+            const pageInfo = document.getElementById('page-info');
+
+            if (pageInfo) pageInfo.textContent = `${currentPage} / ${totalPages}`;
+
+            const btnFirst = document.getElementById('page-first');
+            const btnPrev = document.getElementById('page-prev');
+            const btnNext = document.getElementById('page-next');
+            const btnLast = document.getElementById('page-last');
+
+            const setBtn = (btn, disabled, targetPage) => {
+                if (!btn) return;
+                btn.disabled = disabled;
+                btn.style.opacity = disabled ? "0.5" : "1";
+                btn.style.cursor = disabled ? "not-allowed" : "pointer";
+                btn.onclick = disabled ? null : () => eseguiAggiornamento(targetPage);
+            };
+
+            setBtn(btnFirst, currentPage === 1, 1);
+            setBtn(btnPrev, currentPage === 1, currentPage - 1);
+            setBtn(btnNext, currentPage === totalPages, currentPage + 1);
+            setBtn(btnLast, currentPage === totalPages, totalPages);
+        }
+
+        function attivaJSfilter() {
+            // Gestione apertura/chiusura dropdown
+            document.querySelectorAll('.dropdown-btn-filter').forEach(button => {
+                button.onclick = (e) => {
+                    const parent = button.parentElement;
+                    document.querySelectorAll('.custom-dropdown-filter').forEach(d => {
+                        if (d !== parent) d.classList.remove('active');
+                    });
+                    parent.classList.toggle('active');
+                    e.stopPropagation();
+                };
+            });
+
+            // Selezione Massa (Single Mode)
+            document.querySelectorAll('.dropdown-content-filter.select-mode .dropdown-option-filter').forEach(option => {
+                option.onclick = function () {
+                    const dropdown = this.closest('.custom-dropdown-filter');
+                    dropdown.querySelectorAll('.dropdown-option-filter').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    dropdown.classList.remove('active');
+                    document.getElementById('applied-filter-text').textContent = `Massa: ${this.textContent}`;
+                };
+            });
+
+            // Tasti Visualizzazione
+            document.querySelectorAll('#btn-extended, #btn-compact').forEach(btn => {
+                btn.onclick = function () {
+                    document.querySelectorAll('.btn-action.mode').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    eseguiAggiornamento();
+                };
+            });
+
+            // Tasto Applica e Cambio Righe
+            const btnApply = document.getElementById('btn-apply');
+            if (btnApply) btnApply.onclick = () => eseguiAggiornamento(1);
+
+            const selectRows = document.getElementById('rows-per-page');
+            if (selectRows) selectRows.onchange = () => eseguiAggiornamento(1);
+
+            // Chiusura click esterno
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.custom-dropdown-filter').forEach(d => d.classList.remove('active'));
+            });
+        }
+
+        window.addEventListener('hashchange', gestisciNavigazione);
+        window.addEventListener('DOMContentLoaded', gestisciNavigazione);
+    </script>
+</head>
+
+<body class="fixen">
+    <header id="myHeader">
+        <a href="index.html" style="display: inline-block;">
+            <svg id="logo" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="glow">
+                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <g filter="url(#glow)" transform="translate(-130, 0) scale(0.9)">
+                    <circle cx="357.3" cy="200.5" r="45" fill="#FFFFFF" opacity="0.9" />
+                    <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3" transform="rotate(35 357.3 200.5)" />
+                    <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3" transform="rotate(-35 357.3 200.5)" />
+                </g>
+                <g font-family="Arial" font-weight="bold" fill="#FFFFFF" transform="translate(50, 0)">
+                    <text x="360" y="215" font-size="100">ASTRO</text>
+                    <text x="360" y="275" font-size="65" font-weight="300" opacity="0.8">PROJECT</text>
+                </g>
+            </svg>
+        </a>
+        <nav class="titpage">
+            <h1>Esopianeti</h1>
+            <div class="menu-items">
+                <div class="dropdown">
+                    <a href="#ultimescoperte">Ultime Scoperte</a>
+                    <div class="dropdown-content">
+                        <a href="#scoperte">Ultime Scoperte</a>
+                        <a href="#exoplanet">Archivio AI</a>
+                        <a href="#abitabilita">Abitabilità</a>
+                    </div>
+                </div>
+                <a href="#databaseAI">Database AI</a>
+                <a href="#abitabilita">Abitabilità</a>
+                <button id="openmenu"><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+    <div id="main-content"></div>
+</body>
+</html>

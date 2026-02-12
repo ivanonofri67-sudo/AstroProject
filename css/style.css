@@ -1,0 +1,1001 @@
+body {
+    line-height: 1.6;
+    color: #fff;
+    background: #000;
+    font-size: 18px;
+    font-weight: 400;
+    font-family: "-apple-system", "BlinkMacSystemFont", "Roboto", "Helvetica Neue", sans-serif !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+
+}
+
+body.stop {
+    overflow: hidden;
+}
+
+.fixen {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../img/exoplanet.jpg') no-repeat center center fixed;
+    background-size: cover;
+
+    background-position-y: top;
+    background-color: #000;
+
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    height: 100%;
+    overflow: hidden;
+}
+
+.fixenxx:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+}
+
+#page {
+    position: relative;
+    transition: 1s all ease-in-out;
+}
+
+#page.menuopen {
+    opacity: 0.6;
+    filter: blur(20px);
+    transform: scale(1.2);
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 80px 50px;
+    justify-content: flex-start;
+    align-items: center;
+    background: #222;
+    color: #fff;
+    position: relative;
+}
+
+section:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: #000;
+    opacity: 0.5;
+    height: 100%;
+    width: 100%;
+}
+
+section h1 {
+    font-size: 80px;
+    margin: 0 0 20px 0;
+    z-index: 2;
+    position: relative;
+    text-align: center;
+}
+
+header {
+    z-index: 99999;
+    position: relative;
+}
+
+header #logo {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    right: 0;
+    width: 250px;
+    height: auto;
+    margin: 0 auto;
+    opacity: 1;
+    transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+}
+
+header nav {
+    display: flex;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 500px;
+    margin: 0 auto;
+    top: 120px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 200px;
+    z-index: 9;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+}
+
+header nav a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    display: block;
+    padding: 5px 8px;
+    line-height: 1;
+    font-size: 15px;
+    letter-spacing: 2px;
+    /*text-transform: lowercase;*/
+    transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+    white-space: nowrap;
+}
+
+header nav button {
+    -webkit-appearance: none;
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: absolute;
+    z-index: 99;
+    left: 0;
+    margin: auto;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    outline: 0;
+    border: 0;
+    cursor: pointer;
+    transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+    transform: scale(0);
+}
+
+header nav button span {
+    width: 40%;
+    background: #fff;
+    height: 2px;
+    display: block;
+    margin: 5px auto;
+    transform: scalex(0);
+    transition: 0.6s transform cubic-bezier(0.075, 0.82, 0.165, 1) 0s, 0.3s margin ease-in 0s;
+}
+
+header nav button:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+header nav button:hover span {
+    margin: 10px auto;
+}
+
+header .titlepage {
+    display: flex;
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    width: 500px;
+    margin: 0 auto;
+    top: 120px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 200px;
+    z-index: 9;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+}
+
+
+header .titpage {
+    display: flex;
+    flex-direction: column;
+    /* Forza gli elementi (h1 e menu) uno sotto l'altro */
+    align-items: center;
+    /* Centra orizzontalmente sia l'h1 che il menu */
+    padding: 20px;
+}
+
+header h1 {
+    font-size: 40px;
+    margin: 0;
+    z-index: 2;
+    position: relative;
+    text-align: center;
+}
+
+.menu-items {
+    display: flex;
+    /* Dispone i link in orizzontale */
+    justify-content: center;
+    gap: 20px;
+    /* Spazio uniforme tra le voci del menu */
+    list-style: none;
+    padding: 0;
+
+}
+
+.menu-select {
+    background-color: rgba(255, 255, 255, 0.486);
+    border-radius: 20px;
+    padding: 5px 8px;
+    color: darkslateblue;
+    font-size: large;
+}
+
+.menu-links>a,
+.menu-links .dropdown {
+    white-space: nowrap;
+}
+
+header.sticky #logo {
+    top: 0;
+    transform: scale(0.8);
+    opacity: 0;
+    transition-delay: 0.5s;
+}
+
+header.sticky nav {
+    top: 20px;
+    padding: 0;
+    width: 90px;
+    height: 90px;
+    transition-delay: 0.5s;
+}
+
+header.sticky nav button {
+    transform: scale(1);
+    transition-delay: 0.6s;
+}
+
+header.sticky nav button span {
+    transform: scalex(1);
+    transition: 0.6s transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.8s, 0.3s margin ease-in 0s;
+}
+
+header.sticky nav a {
+    padding: 0;
+    opacity: 0;
+    letter-spacing: 0px;
+    transform: scale(0.3);
+    transition-delay: 0.2s;
+}
+
+#fixedlink {
+    position: fixed;
+    bottom: 0;
+    z-index: 9999;
+    right: 0;
+    left: 0;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 20px;
+}
+
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+}
+
+.previewCard {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    /* Formato verticale tipico delle carte */
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    /* Spinge il testo in basso */
+    transition: transform 0.4s ease;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.previewCard:hover {
+    transform: translateY(-10px) scale(1.02);
+}
+
+.backdrop {
+    position: absolute;
+    object-fit: cover;
+    pointer-events: none;
+    user-select: none;
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+    transition: transform 0.5s ease;
+}
+
+.previewCard:hover .backdrop {
+    transform: scale(1.1);
+}
+
+.card-link {
+    text-decoration: none;
+    /* Rimuove la sottolineatura */
+    color: inherit;
+    /* Mantiene il colore bianco del testo */
+    display: block;
+    /* Fa sì che il link occupi tutto lo spazio della card */
+}
+
+/* Opzionale: se vuoi che l'effetto hover si attivi correttamente */
+.card-link:hover .previewCard {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.content {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    /* Sfoca leggermente lo sfondo dietro il testo */
+
+    /*width: 100%;*/
+    box-sizing: border-box;
+    /* Forza il padding a stare DENTRO il 100% */
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.category {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #00d4ff;
+    /* Colore d'accento spaziale */
+    margin-bottom: 5px;
+}
+
+.description p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0.8;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Taglia il testo dopo 2 righe per pulizia */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#esopianeti {
+    padding-top: 220px !important;
+    /* Aumenta lo spazio superiore solo qui */
+}
+
+
+/* Contenitore principale della voce con dropdown */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Stile del sottomenu */
+.dropdown-content {
+    display: block;
+    position: absolute;
+    top: 100%;
+    /* Appare sotto la voce */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(15, 15, 15, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    min-width: 180px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+
+    /* Animazione di scomparsa */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+/* Link all'interno del sottomenu */
+.dropdown-content a {
+    color: #fff !important;
+    padding: 12px 20px;
+    text-decoration: none;
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+    transition: 0.2s;
+    text-align: center;
+}
+
+.dropdown-content a:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.05);
+    color: #00d4ff !important;
+    /* Colore d'accento */
+}
+
+/* Mostra il menu al passaggio del mouse */
+.dropdown:hover .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+
+/* --- OTTIMIZZAZIONE MOBILE --- */
+@media (max-width: 768px) {
+
+    /* Se l'header è sticky o in modalità mobile, il dropdown deve comportarsi diversamente */
+    .dropdown-content {
+        position: static;
+        /* Si incolonna nel menu mobile */
+        transform: none;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        display: none;
+        /* Lo gestiremo via click su mobile se necessario */
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+}
+
+
+
+#main-content {
+    position: fixed;
+    top: 220px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+    /* Attiva lo scroll verticale SOLO qui dentro */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.5) transparent;
+}
+
+#main-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+#main-content::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+}
+
+/* Contenitore per gestire lo scrolling su mobile */
+.glass-table-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    border-radius: 24px;
+    overflow: hidden;
+    /* Taglia i bordi della tabella per seguire il radius */
+    background: rgba(15, 23, 42, 0.4);
+    /* Blu molto scuro trasparente */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    max-height: 480px; /* Imposta un'altezza massima per attivare lo scroll */
+    overflow-y: auto;
+}
+
+.glass-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #f8fafc;
+    text-align: left;
+}
+
+/* Header della tabella */
+.glass-table thead tr {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-table th {
+    padding: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    color: #38bdf8;
+    /* Colore d'accento */
+    white-space: nowrap;
+}
+
+/* Celle della tabella */
+.glass-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.95rem;
+}
+
+/* Rendi l'header fisso */
+.glass-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #1e293b; /* Colore solido o leggermente trasparente per coprire le righe sotto */
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4); /* Opzionale: aggiunge una piccola ombra sotto l'header */
+}
+
+/* Effetto Hover sulla riga */
+.glass-table tbody tr {
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.glass-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Badge di stato */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.green {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+}
+
+.status-badge.blue {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+}
+
+.status-badge.red {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+}
+
+.planet-name {
+    font-weight: 600;
+    color: #ffffff;
+}
+/* Layout per allineare testo e icone */
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Corretto: spinge le icone a destra */
+    gap: 5px;
+}
+
+/* Contenitore delle frecce impilate */
+.sort-icons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+     /* line-height: 0.7;Avvicina i due triangoli */
+    gap: 4px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.sort-icons:hover {
+    opacity: 1;
+}
+
+.sort-arrow {
+    font-size: 0.8rem;
+    color: #38bdf8;
+    user-select: none; /* Impedisce di selezionare il testo dei triangoli per sbaglio */
+    line-height: 1;    /* Reset del line-height per un controllo preciso del gap */
+    transition: all 0.2s ease;
+}
+
+/* Evidenzia la freccia al passaggio del mouse */
+.sort-arrow:hover {
+    color: #ffffff;
+    transform: scale(1.3);
+}
+/* Colore della freccia quando l'ordinamento è attivo */
+.sort-arrow.active {
+    color: #ffffff;
+    opacity: 1;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+}
+
+
+
+/* Layout Barra Filtri */
+/* Contenitore generale per spaziatura */
+.main-wrapper {
+    max-width: 800px; /* Allineato alla larghezza della tabella */
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column; /* Forza l'incolonnamento verticale dei due blocchi */
+    gap: 15px; /* Spazio tra filtri e tabella */
+}
+
+/* La Barra dei Filtri */
+.filter-bar {
+    display: flex;
+    position: relative;
+    z-index: 100;
+    gap: 12px;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 20px;
+    display: flex; /* Affianca select e riepilogo all'interno */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* Colonna sinistra: i select */
+.filter-controls-left {
+    display: flex;
+    flex-direction: column; /* Mette i select uno sopra l'altro */
+    gap: 6px;
+    flex: 0 0 100px; /* Larghezza fissa per la colonna select */
+}
+
+.filter-controls-left select {
+    background: rgba(30, 41, 59, 0.8);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    height: 30px;
+}
+
+.filter-controls-left select:focus {
+    border-color: #38bdf8;
+}
+
+/* Parte destra: il testo */
+.filter-summary-right {
+    flex: 1; /* Prende tutto lo spazio rimanente a destra */
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 8px 15px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 60px;
+}
+
+.summary-label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: #38bdf8;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+#applied-filter-text {
+    color: #f8fafc;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Assicurati che la tabella non abbia margini che rompono l'allineamento */
+.glass-table-container {
+    margin: 0; 
+    width: 100%;
+}
+/* Colonna dei 3 tasti a destra */
+.filter-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 0 0 140px; /* Larghezza fissa per i tasti */
+}
+
+/* Stile base dei pulsanti */
+.btn-action {
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tasto Applica (Verde/Azzurro) */
+.btn-action.apply {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    flex: none; /* Lo rende un po' più alto se necessario */
+    margin-bottom: 2px;
+}
+
+.btn-action.apply:hover {
+    background: #38bdf8;
+    color: #0f172a;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+/* Tasti Modalità (Grigio/Bianco) */
+.btn-action.mode {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-action.mode:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Effetto 'attivo' per simulare la selezione di Compatto/Esteso */
+/* Stile per il tasto attivo (Esteso o Compatto) */
+.btn-action.mode.active {
+    background: rgba(56, 189, 248, 0.3); /* Azzurro più intenso */
+    color: #ffffff;
+    border: 1px solid #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+    pointer-events: none; /* Impedisce di cliccare di nuovo sul tasto già attivo */
+}
+/* Contenitore verticale per la colonna centrale */
+.filter-center-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Spazio tra il riepilogo e la paginazione */
+}
+
+/* Riga Paginazione */
+.pagination-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Combo righe per pagina */
+.page-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: #38bdf8;
+}
+
+#rows-per-page {
+    background: rgba(30, 41, 59, 0.8);
+    color: #fff;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 5px;
+    padding: 2px 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+/* Controlli Pagina (Tasti) */
+.page-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-page {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-page:hover {
+    background: rgba(56, 189, 248, 0.2);
+    border-color: #38bdf8;
+    color: #38bdf8;
+}
+
+#page-info {
+    font-size: 0.75rem;
+    color: #f8fafc;
+    margin: 0 8px;
+    font-family: monospace;
+}
+
+/* Riduciamo leggermente l'altezza del summary-right originale per bilanciare */
+.filter-summary-right {
+    min-height: 45px !important;
+    padding: 6px 15px !important;
+}
+
+/* Container per il posizionamento */
+.custom-dropdown-filter {
+    position: relative;
+    width: 100%;
+}
+
+/* Il pulsante che sostituisce la select */
+.dropdown-btn-filter {
+    width: 100%;
+    background: rgba(30, 41, 59, 0.8);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-align: left;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.dropdown-btn-filter::after {
+    content: '▼';
+    font-size: 0.6rem;
+    margin-left: 8px;
+}
+
+/* Il menu a tendina */
+.dropdown-content-filter {
+    display: none; /* Nascosto di default */
+    position: absolute;
+    left: 105%; /* Appare a lato del pulsante */
+    top: 0;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(10px);
+    order: 1px solid rgba(56, 189, 248, 0.5);
+    border-radius: 12px;
+    padding: 10px;
+    pointer-events: auto !important;
+    z-index: 99999;
+    min-width: 160px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+}
+
+/* Mostra quando attivo */
+.custom-dropdown-filter.active .dropdown-content-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Era 8px, ora è molto ridotto */
+    padding: 6px;
+}
+/* Quando il contenitore è active, evidenzia il pulsante */
+.custom-dropdown-filter.active .dropdown-btn-filter {
+    background: #38bdf8; /* Sfondo pieno azzurro */
+    color: #0f172a;      /* Testo scuro per contrasto */
+    border-color: #38bdf8;
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+    outline: none;
+}
+/* Cambia anche il colore della freccina quando è attivo */
+.custom-dropdown-filter.active .dropdown-btn-filter::after {
+    color: #0f172a;
+    transform: rotate(180deg); /* Opzionale: ruota la freccia verso l'alto */
+}
+
+/* Transizione fluida per l'effetto evidenziato */
+.dropdown-btn-filter {
+    transition: all 0.3s ease;
+}
+/* Stile delle checkbox e label */
+.dropdown-content-filter label {
+    color: #f8fafc;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 8px; /* Riduciamo il padding superiore e inferiore a 2px */
+    margin: 0;        /* Azzeriamo eventuali margini */
+    line-height: 1.2;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.dropdown-content-filter label:hover {
+    background: rgba(56, 189, 248, 0.1);
+}
+
+.dropdown-content-filter input[type="checkbox"] {
+    margin: 0;
+    width: 14px;  /* Dimensione fissa per coerenza */
+    height: 14px;
+    accent-color: #38bdf8;
+    cursor: pointer;
+}
+.dropdown-content-filter.select-mode {
+    padding: 4px 0; /* Padding verticale per le estremità della lista */
+    gap: 0;         /* Nessuno spazio tra le righe per un look compatto */
+}
+.dropdown-option-filter {
+    color: #f8fafc;
+    font-size: 0.8rem;
+    padding: 6px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* Evita che il testo vada a capo */
+}
+
+/* Effetto hover stile selezione */
+.dropdown-option-filter:hover {
+
+    padding-left: 20px; /* Piccolo effetto movimento al passaggio */
+}
+
+/* Stile per l'opzione attualmente selezionata (opzionale via JS) */
+.dropdown-option-filter.selected {
+    background: rgba(56, 189, 248, 0.3);
+    color: #fff;
+    font-weight: bold;
+}
+.dropdown-content-filter.select-mode .dropdown-option-filter:hover {
+    background-color: rgba(56, 189, 248, 0.2) !important;
+    color: #38bdf8 !important;
+    cursor: pointer !important;
+}

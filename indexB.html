@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Index Auto Dimensionabile</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        .auto-div {
+            flex: 1 1 300px;
+            min-width: 200px;
+            min-height: 150px;
+            background: #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s;
+        }
+
+        .auto-div:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+    <script>
+        async function caricaDati() {
+            try {
+                //const risposta = await fetch('http://localhost:3000/dati');
+                //const risposta = await fetch('http://localhost:3000/tutti-pianeti');
+                const risposta = await fetch('https://wl.page.gd/dati.php');
+
+                const dati = await risposta.json();
+
+                const corpoTabella = document.getElementById('tabella-dati');
+                corpoTabella.innerHTML = ""; // Pulisce la tabella prima di caricarla
+                dati.forEach(riga => {
+                    const tr = document.createElement('tr');
+
+                    // Sostituisci riga.id, riga.nome ecc. con i nomi reali delle tue colonne MySQL
+                    tr.innerHTML = `
+                <td>${riga.name}</td>
+                <td>${riga.planet_status}</td>
+                <td>${riga.mass}</td>
+            `;
+
+                    corpoTabella.appendChild(tr);
+                });
+
+            } catch (errore) {
+                console.error("Errore nel caricamento dei dati:", errore);
+            }
+        }
+        //caricaDati();
+
+
+
+
+
+        // da qui in giu
+        async function singolodato() {
+            try {
+                //const risposta = await fetch('http://localhost:3000/dati');
+
+                const risposta = await fetch('http://localhost:3000/tutti-singnolink');
+                //const risposta = await fetch('https://wl.page.gd/dati.php?filtro=singnolink');
+
+                const dati = await risposta.json();
+
+                const corpoTabella = document.getElementById('tabella-dati');
+                corpoTabella.innerHTML = ""; // Pulisce la tabella prima di caricarla
+                dati.forEach(riga => {
+                    const tr = document.createElement('tr');
+
+                    // Sostituisci riga.id, riga.nome ecc. con i nomi reali delle tue colonne MySQL
+                    tr.innerHTML = `
+                <td>${riga.name}</td>
+                <td>${riga.planet_status}</td>
+                <td>${riga.mass}</td>
+            `;
+
+                    corpoTabella.appendChild(tr);
+                });
+
+            } catch (errore) {
+                console.error("Errore nel caricamento dei dati:", errore);
+            }
+        };
+
+
+
+
+        async function processolinkfoto() {
+
+            try {
+                const risposta = await fetch('http://localhost:3000/singnolink');
+                //const risposta = await fetch('https://wl.page.gd/dati.php?filtro=singnolink');
+                const dati = await risposta.json();
+                //var nome = dati.name;
+
+                if (dati.length > 0) {
+
+
+                    var Vname = dati[0].name;
+                    var Vplanet_status = dati[0].planet_status;
+                    var Vmass = dati[0].mass;
+                    var Vmass_error_min = dati[0].mass_error_min;
+                    var Vmass_error_max = dati[0].mass_error_max;
+                    var Vmass_sini = dati[0].mass_sini;
+                    var Vmass_sini_error_min = dati[0].mass_sini_error_min;
+                    var Vmass_sini_error_max = dati[0].mass_sini_error_max;
+                    var Vradius = dati[0].radius;
+                    var Vradius_error_min = dati[0].radius_error_min;
+                    var Vradius_error_max = dati[0].radius_error_max;
+                    var Vorbital_period = dati[0].orbital_period;
+                    var Vorbital_period_error_min = dati[0].orbital_period_error_min;
+                    var Vorbital_period_error_max = dati[0].orbital_period_error_max;
+                    var Vsemi_major_axis = dati[0].semi_major_axis;
+                    var Vsemi_major_axis_error_min = dati[0].semi_major_axis_error_min;
+                    var Vsemi_major_axis_error_max = dati[0].semi_major_axis_error_max;
+                    var Veccentricity = dati[0].eccentricity;
+                    var Veccentricity_error_min = dati[0].eccentricity_error_min;
+                    var Veccentricity_error_max = dati[0].eccentricity_error_max;
+                    var Vinclination = dati[0].inclination;
+                    var Vinclination_error_min = dati[0].inclination_error_min;
+                    var Vinclination_error_max = dati[0].inclination_error_max;
+                    var Vangular_distance = dati[0].angular_distance;
+                    var Vdiscovered = dati[0].discovered;
+                    var Vupdated = dati[0].updated;
+                    var Vomega = dati[0].omega;
+                    var Vomega_error_min = dati[0].omega_error_min;
+                    var Vomega_error_max = dati[0].omega_error_max;
+                    var Vtperi = dati[0].tperi;
+                    var Vtperi_error_min = dati[0].tperi_error_min;
+                    var Vtperi_error_max = dati[0].tperi_error_max;
+                    var Vtconj = dati[0].tconj;
+                    var Vtconj_error_min = dati[0].tconj_error_min;
+                    var Vtconj_error_max = dati[0].tconj_error_max;
+                    var Vtzero_tr = dati[0].tzero_tr;
+                    var Vtzero_tr_error_min = dati[0].tzero_tr_error_min;
+                    var Vtzero_tr_error_max = dati[0].tzero_tr_error_max;
+                    var Vtzero_tr_sec = dati[0].tzero_tr_sec;
+                    var Vtzero_tr_sec_error_min = dati[0].tzero_tr_sec_error_min;
+                    var Vtzero_tr_sec_error_max = dati[0].tzero_tr_sec_error_max;
+                    var Vlambda_angle = dati[0].lambda_angle;
+                    var Vlambda_angle_error_min = dati[0].lambda_angle_error_min;
+                    var Vlambda_angle_error_max = dati[0].lambda_angle_error_max;
+                    var Vimpact_parameter = dati[0].impact_parameter;
+                    var Vimpact_parameter_error_min = dati[0].impact_parameter_error_min;
+                    var Vimpact_parameter_error_max = dati[0].impact_parameter_error_max;
+                    var Vtzero_vr = dati[0].tzero_vr;
+                    var Vtzero_vr_error_min = dati[0].tzero_vr_error_min;
+                    var Vtzero_vr_error_max = dati[0].tzero_vr_error_max;
+                    var Vk = dati[0].k;
+                    var Vk_error_min = dati[0].k_error_min;
+                    var Vk_error_max = dati[0].k_error_max;
+                    var Vtemp_calculated = dati[0].temp_calculated;
+                    var Vtemp_calculated_error_min = dati[0].temp_calculated_error_min;
+                    var Vtemp_calculated_error_max = dati[0].temp_calculated_error_max;
+                    var Vtemp_measured = dati[0].temp_measured;
+                    var Vhot_point_lon = dati[0].hot_point_lon;
+                    var Vgeometric_albedo = dati[0].geometric_albedo;
+                    var Vgeometric_albedo_error_min = dati[0].geometric_albedo_error_min;
+                    var Vgeometric_albedo_error_max = dati[0].geometric_albedo_error_max;
+                    var Vlog_g = dati[0].log_g;
+                    var Vpublication = dati[0].publication;
+                    var Vdetection_type = dati[0].detection_type;
+                    var Vmass_measurement_type = dati[0].mass_measurement_type;
+                    var Vradius_measurement_type = dati[0].radius_measurement_type;
+                    var Valternate_names = dati[0].alternate_names;
+                    var Vmolecules = dati[0].molecules;
+                    var Vstar_name = dati[0].star_name;
+                    var Vra = dati[0].ra;
+                    var Vdec = dati[0].dec;
+                    var Vmag_v = dati[0].mag_v;
+                    var Vmag_i = dati[0].mag_i;
+                    var Vmag_j = dati[0].mag_j;
+                    var Vmag_h = dati[0].mag_h;
+                    var Vmag_k = dati[0].mag_k;
+                    var Vstar_distance = dati[0].star_distance;
+                    var Vstar_distance_error_min = dati[0].star_distance_error_min;
+                    var Vstar_distance_error_max = dati[0].star_distance_error_max;
+                    var Vstar_metallicity = dati[0].star_metallicity;
+                    var Vstar_metallicity_error_min = dati[0].star_metallicity_error_min;
+                    var Vstar_metallicity_error_max = dati[0].star_metallicity_error_max;
+                    var Vstar_mass = dati[0].star_mass;
+                    var Vstar_mass_error_min = dati[0].star_mass_error_min;
+                    var Vstar_mass_error_max = dati[0].star_mass_error_max;
+                    var Vstar_radius = dati[0].star_radius;
+                    var Vstar_radius_error_min = dati[0].star_radius_error_min;
+                    var Vstar_radius_error_max = dati[0].star_radius_error_max;
+                    var Vstar_sp_type = dati[0].star_sp_type;
+                    var Vstar_age = dati[0].star_age;
+                    var Vstar_age_error_min = dati[0].star_age_error_min;
+                    var Vstar_age_error_max = dati[0].star_age_error_max;
+                    var Vstar_teff = dati[0].star_teff;
+                    var Vstar_teff_error_min = dati[0].star_teff_error_min;
+                    var Vstar_teff_error_max = dati[0].star_teff_error_max;
+                    var Vstar_detected_disc = dati[0].star_detected_disc;
+                    var Vstar_magnetic_field = dati[0].star_magnetic_field;
+                    var Vstar_alternate_names = dati[0].star_alternate_names;
+
+                    let tipoPianeta = "";
+                    let atmosfera = "";
+                    let luceStella = "";
+                    let dettagliMolecolari = "";
+
+                    // 1. Determina la natura del pianeta in base al raggio (in raggi terrestri)
+                    if (Vradius > 6 || Vmass > 50) {
+                        // Se il raggio è > 6 O la massa è > 50 masse terrestri
+                        tipoPianeta = "a massive gas giant like Jupiter with swirling cloud bands, thick atmosphere and immense storms";
+                    } else if (Vradius > 1.5 || Vmass > 10) {
+                        // Se è una via di mezzo (tipo Nettuno o Super-Terra massiccia)
+                        tipoPianeta = "a Neptune-like ice giant with a thick gaseous envelope, deep blue and turquoise hues";
+                    } else {
+                        // Solo se entrambi i valori sono bassi è roccioso
+                        tipoPianeta = "a rocky terrestrial exoplanet, detailed surface with craters and mountain ranges";
+                    }
+
+                    /// 2. Analisi Molecolare (Tocco Extra)
+                    // Supponendo che Vmolecules sia una stringa tipo "H2O, CH4, CO2"
+                    if (Vmolecules && Vmolecules.trim() !== "") {
+                        let mol = Vmolecules.toLowerCase();
+                        let m_list = [];
+
+                        if (mol.includes("h2o")) m_list.push("shimmering water vapor clouds and haze");
+                        if (mol.includes("ch4")) m_list.push("deep blue methane tints in the upper atmosphere");
+                        if (mol.includes("co2")) m_list.push("a thick, heavy carbon dioxide veil, slightly yellowish");
+                        if (mol.includes("na") || mol.includes("k")) m_list.push("exotic alkali metal vapors creating strange spectral hues");
+                        if (mol.includes("co")) m_list.push("darker, soot-like atmospheric particulates");
+
+                        if (m_list.length > 0) {
+                            dettagliMolecolari = " The atmosphere is chemically rich, featuring " + m_list.join(" and ") + ".";
+                        }
+                    }
+
+                    // 3. Aspetto in base alla Temperatura
+                    if (Vtemp_calculated > 1200) {
+                        atmosfera = "The surface is a hellish landscape of molten silicate lava and glowing cracks.";
+                    } else if (Vtemp_calculated > 273 && Vtemp_calculated < 373) {
+                        atmosfera = "The environment looks hospitable, with potential liquid surface features and soft condensation.";
+                    } else if (Vtemp_calculated < 150) {
+                        atmosfera = "The planet is locked in a deep freeze, covered in exotic ices and frost.";
+                    } else {
+                        atmosfera = "The planet is shrouded in mysterious, dense cloud decks.";
+                    }
+
+                    // 4. Luce della Stella
+                    if (Vstar_teff < 4000) {
+                        luceStella = "The scene is bathed in the moody, dim crimson light of a nearby red dwarf star.";
+                    } else if (Vstar_teff > 7000) {
+                        luceStella = "The planet is hit by the intense, sterile blue-white radiation of a massive hot star.";
+                    } else {
+                        luceStella = "It is illuminated by the familiar golden light of a sun-like G-type star.";
+                    }
+
+                    // Prompt Finale
+                    let promptFinale = `Photorealistic 8k space telescope photography of the exoplanet ${Vname}. ` +
+                        `It is ${tipoPianeta}. ${atmosfera}${dettagliMolecolari} ` +
+                        `${luceStella} High contrast, volumetric lighting, NASA-style scientific visualization. Lens flare, slight chromatic aberration, deep space background with Milky Way nebula, sharp focus`;
+                    //` -- Vradius=` + Vradius + `-Vmass` +Vmass + `-Vmolecules` +Vmolecules + `-Vtemp_calculated` +Vtemp_calculated + `-Vstar_teff` +Vstar_teff;
+
+
+                    
+                    //alert("Il prompt con foto è: " + promptFinale + "-- Vname=" + Vname );
+                    generaImmagine(Vname,promptFinale);
+                } else {
+                    alert("Nessun pianeta trovato con questo filtro");
+                }
+                
+
+
+
+
+
+                //var link = "prova";
+                //putfotolink(Vname, link);
+
+            } catch (errore) {
+                console.error("Errore nel caricamento dei dati:", errore);
+            }
+        }
+
+        async function generaImmagine(name,prompt) {       
+            //const prompt = document.getElementById('promptInput').value;
+            const status = document.getElementById('status');
+            const container = document.getElementById('imageContainer');
+            
+            status.innerText = "In corso... attendi circa 20-30 secondi.";
+            container.innerHTML = "";
+
+            try {
+                const response = await fetch('http://localhost:3000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, name })
+                });
+
+                const data = await response.json();
+                if (data.url) {
+                    status.innerText = "Immagine caricata su imgBB!";
+                    container.innerHTML = `<img src="${data.url}" alt="Esopianeta">`;
+                    putfotolink(name, data.url);
+                    status.innerText = "Immagine generata e link salvato nel database... attendi il prossimo ciclo.";
+                    setTimeout(() => { processolinkfoto();}, 10000);
+                } else {
+                    status.innerText = "Errore durante la generazione.";
+                }
+            } catch (err) {
+                status.innerText = "Errore di connessione al server locale.";
+            }
+        }
+
+
+        async function putfotolink(nomev, linkv) {
+            try {
+                const response = await fetch('http://localhost:3000/addfotolink', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: nomev,
+                        link: linkv
+                    })
+                });
+
+                const data = await response.json();
+                console.log("Risposta server:", data);
+
+            } catch (error) {
+                console.error("Errore nell'inserimento del link foto:", error);
+            }
+        }
+
+
+
+    </script>
+</head>
+
+<body>
+    <h1>Benvenuto nella Pagina Index</h1>
+    <div class="container">
+        <div class="auto-div">
+            <h2>Div 1</h2>
+            <p>Avvia processo</p>
+            <button onclick="processolinkfoto()">Avvia</button>
+            <div id="result">
+                <p id="status"></p>
+                <div id="imageContainer"></div>
+            </div>
+
+
+        </div>
+
+
+
+        <script>
+            //singolodato();
+
+        </script>
+    </div>
+</body>
+
+</html>

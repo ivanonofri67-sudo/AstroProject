@@ -1,0 +1,174 @@
+<input type="hidden" id="total-rows-db" value="452">
+<div class="main-wrapper">
+    <div class="filter-bar">
+        <div class="filter-controls-left">
+            <div class="custom-dropdown-filter">
+                <button class="dropdown-btn-filter" id="btn-filter-1">Stato</button>
+                <div class="dropdown-content-filter">
+                    <label><input type="checkbox" value="confermato"> Confermato</label>
+                    <label><input type="checkbox" value="candidato"> Candidato</label>
+                    <label><input type="checkbox" value="altro"> Altro</label>
+                </div>
+            </div>
+
+            <div class="custom-dropdown-filter">
+                <button class="dropdown-btn-filter" id="btn-filter-2">Rilevamento</button>
+                <div class="dropdown-content-filter">
+                    <label><input type="checkbox" value="os1"> Velocità radiale</label>
+                    <label><input type="checkbox" value="os2"> Tempistica</label>
+                    <label><input type="checkbox" value="os3"> Microlenti</label>
+                    <label><input type="checkbox" value="os4"> Imaging</label>
+                    <label><input type="checkbox" value="os5"> Transito primario</label>
+                    <label><input type="checkbox" value="os6"> Astrometria</label>
+                    <label><input type="checkbox" value="os7"> TTV</label>
+                    <label><input type="checkbox" value="os8"> Transito secondario</label>
+                    <label><input type="checkbox" value="os9"> Ciematico</label>
+                    <label><input type="checkbox" value="os10"> Altro</label>
+
+                </div>
+            </div>
+
+            <div class="custom-dropdown-filter">
+                <button class="dropdown-btn-filter" id="btn-filter-3">Preimpostato</button>
+                <div class="dropdown-content-filter select-mode">
+                    <div class="dropdown-option-filter" data-value="">Tutte</div>
+                    <div class="dropdown-option-filter" data-value="Prei-1">Obj-> 0.1 Mea < Mass < 13 Mjup</div>
+                            <div class="dropdown-option-filter" data-value="Prei-2">Obj-> 13 Mjup < Mass < 30 Mjup</div>
+                                    <div class="dropdown-option-filter" data-value="Prei-3">Obj-> Mass > 30Mjup</div>
+                                    <div class="dropdown-option-filter" data-value="Prei-4">Obj-> Mass < 0.1 Mea</div>
+                                            <div class="dropdown-option-filter" data-value="Prei-5">Obj circumbinaries->
+                                                Mass < 13Mjup</div>
+                                                    <div class="dropdown-option-filter" data-value="Prei-6">Obj
+                                                        circumbinaries All</div>
+                                                    <div class="dropdown-option-filter" data-value="Prei-7">Obj of stars
+                                                        from post main sequence</div>
+                                                    <div class="dropdown-option-filter" data-value="Prei-8">Obj Free
+                                                        floating exoplanets</div>
+                                            </div>
+                                    </div>
+                            </div>
+
+                            <div class="filter-center-column">
+                                <div class="filter-summary-right">
+                                    <span class="summary-label">Filtro applicato</span>
+                                    <div id="applied-filter-text">In attesa di selezione...</div>
+                                </div>
+
+                                <div class="pagination-row">
+                                    <div class="page-size-selector">
+                                        <select id="rows-per-page">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                        <span>righe</span>
+                                    </div>
+
+                                    <div class="page-controls">
+                                        <button class="btn-page" id="page-first">«</button>
+                                        <button class="btn-page" id="page-prev">‹</button>
+                                        <span id="page-info">1 / 10</span>
+                                        <button class="btn-page" id="page-next">›</button>
+                                        <button class="btn-page" id="page-last">»</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filter-actions">
+                                <button class="btn-action apply" id="btn-apply">Applica Filtri</button>
+                                <button class="btn-action mode" id="btn-extended">Esteso</button>
+                                <button class="btn-action mode active" id="btn-compact">Compatto</button>
+                            </div>
+                    </div>
+                    <div class="glass-table-container">
+                        <table class="glass-table">
+                            <thead>
+                                <tr>
+                                    <th data-db-column="planet_name">
+                                        <div class="header-content">
+                                            <span>Pianeta</span>
+                                            <div class="sort-icons">
+                                                <span class="sort-arrow up">▲</span>
+                                                <span class="sort-arrow down">▼</span>
+                                           </div>
+                                        </div>
+                                    </th>
+                                    <th data-db-column="system_name">
+                                        <div class="header-content">
+                                            <span>Sistema</span>
+                                            <div class="sort-icons">
+                                                <span class="sort-arrow up">▲</span>
+                                                <span class="sort-arrow down">▼</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th data-db-column="mass">
+                                        <div class="header-content">
+                                            <span>Massa (M<sub>Jup</sub>)</span>
+                                            <div class="sort-icons">
+                                                <span class="sort-arrow up">▲</span>
+                                                <span class="sort-arrow down">▼</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th data-db-column="distance">
+                                        <div class="header-content">
+                                            <span>Distanza (ly)</span>
+                                            <div class="sort-icons">
+                                                <span class="sort-arrow up">▲</span>
+                                                <span class="sort-arrow down">▼</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th data-db-column="status">
+                                        <div class="header-content">
+                                            <span>Status</span>
+                                            <div class="sort-icons">
+                                                <span class="sort-arrow up">▲</span>
+                                                <span class="sort-arrow down">▼</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="planet-name">Kepler-186f</span></td>
+                                    <td>Kepler-186</td>
+                                    <td>582</td>
+                                    <td>582</td>
+                                    <td><span class="status-badge green">Abitabile</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="planet-name">Proxima b</span></td>
+                                    <td>Centauri</td>
+                                    <td>4.2</td>
+                                    <td>582</td>
+                                    <td><span class="status-badge blue">Analisi</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="planet-name">TRAPPIST-1e</span></td>
+                                    <td>TRAPPIST-1</td>
+                                    <td>39.5</td>
+                                    <td>582</td>
+                                    <td><span class="status-badge green">Abitabile</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="planet-name">Gliese 581g</span></td>
+                                    <td>Gliese 581</td>
+                                    <td>20.3</td>
+                                    <td>582</td>
+                                    <td><span class="status-badge red">Rischio</span></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="planet-name">Gliese 581g</span></td>
+                                    <td>Gliese 581</td>
+                                    <td>20.3</td>
+                                    <td>582</td>
+                                    <td><span class="status-badge red">Rischio</span></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html class="fixen" lang="it">
+
+<head>
+    <meta charset="UTF-8">
+
+
+
+
+    <title>AstroProject</title>
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script>
+        //var sortSTR = `?sort=&order=`;
+        async function gestisciNavigazione() {
+            const container = document.getElementById('main-content');
+
+            if (!container) {
+                console.error("ERRORE: Elemento 'main-content' non trovato nel DOM!");
+                return;
+            }
+
+            // 1. Ottieni il nome della pagina dall'URL
+            let pagina = window.location.hash.replace('#', '');
+
+            // Se l'URL è solo # o vuoto, carica la home di default
+            if (!pagina || pagina === "") pagina = 'ultimescoperte';
+
+            console.log("Tentativo di caricamento file:", pagina + ".html");
+
+            try {
+                // 2. Carica il file HTML
+                const risposta = await fetch(`${pagina}.html`);
+
+                if (!risposta.ok) {
+                    throw new Error(`File ${pagina}.html non trovato (Errore ${risposta.status})`);
+                }
+
+                const html = await risposta.text();
+
+                // 3. Inserisci il contenuto
+                container.innerHTML = html;
+                if (pagina === 'databaseAI') {
+                    attivaOrdinamento();
+                    attivaJSfilter();
+                }
+
+                // 4. Gestione estetica del menu (opzionale)
+                document.querySelectorAll('nav a').forEach(link => {
+                    if (link.getAttribute('href') === `#${pagina}`) {
+                        link.classList.add('menu-select');
+                    } else {
+                        link.classList.remove('menu-select');
+                    }
+                });
+
+            } catch (errore) {
+                console.error("Errore AJAX:", errore.message);
+                container.innerHTML = `<h2>Errore di caricamento</h2><p>${errore.message}</p>`;
+            }
+        }
+
+
+        function attivaOrdinamento() {
+            document.querySelectorAll('.sort-icons').forEach((container) => {
+                // Pulizia listener per evitare chiamate multiple
+                container.replaceWith(container.cloneNode(true));
+            });
+
+            document.querySelectorAll('.sort-icons').forEach((container, index) => {
+                container.addEventListener('click', function (e) {
+                    const arrow = e.target.closest('.sort-arrow');
+                    if (!arrow) return;
+
+                    // Determina la direzione
+                    const direzione = arrow.classList.contains('up') ? 'ASC' : 'DESC';
+
+                    // Determina il nome della colonna (puoi usare un attributo data-column nel TH)
+                    const th = this.closest('th');
+                    const colonna = th.getAttribute('data-db-column') || index;
+
+                    // Chiamata alla funzione di caricamento con i parametri SQL
+                    // Esempio: caricaPagina('pianeti', 'massa', 'DESC')
+
+                    const nomePagina = window.location.hash.replace('#', '');
+                    caricaPaginaOrdinata(nomePagina, colonna, direzione);
+                });
+            });
+        }
+        async function caricaPaginaOrdinata(pagina, colonna, ordine) {
+            try {
+                // Costruisci l'URL con i parametri di ordinamento
+                // Esempio: server.php?page=pianeti&sort=massa&order=ASC
+                sortSTR = `?sort=${colonna}&order=${ordine}`;
+                const url = `${pagina}.html${sortSTR}`;
+
+                const risposta = await fetch(url);
+                if (!risposta.ok) throw new Error("Errore server");
+
+                const html = await risposta.text();
+                document.getElementById('main-content').innerHTML = html;
+                // Riattiva i listener e illumina la freccia corretta
+                attivaOrdinamento();
+                evidenziaFreccia(colonna, ordine);
+                attivaJSfilter();
+            } catch (errore) {
+                console.error("Errore:", errore);
+            }
+        }
+
+        function evidenziaFreccia(colonna, ordine) {
+            // Cerchiamo il TH che ha l'attributo data-db-column corrispondente
+            const th = document.querySelector(`th[data-db-column="${colonna}"]`);
+
+            if (th) {
+                const classe = (ordine.toUpperCase() === 'ASC') ? '.up' : '.down';
+                const freccia = th.querySelector(classe);
+                if (freccia) {
+                    // Rimuoviamo prima 'active' da TUTTE le frecce nella tabella
+                    document.querySelectorAll('.sort-arrow').forEach(el => el.classList.remove('active'));
+                    // Aggiungiamo 'active' a quella corretta
+                    freccia.classList.add('active');
+                } else {
+                    console.warn(`Freccia ${classe} non trovata nel TH:`, th);
+                }
+            } else {
+                console.warn(`Nessun <th> trovato con data-db-column="${colonna}"`);
+            }
+        }
+        function attivaJSfilter() {
+            // --- GESTIONE DROP DOWN (Codice esistente) ---
+            document.querySelectorAll('.dropdown-btn-filter').forEach(button => {
+                button.onclick = (e) => {
+                    document.querySelectorAll('.custom-dropdown-filter').forEach(d => {
+                        if (d !== button.parentElement) d.classList.remove('active');
+                    });
+                    button.parentElement.classList.toggle('active');
+                    e.stopPropagation();
+                };
+            });
+
+            document.querySelectorAll('.dropdown-content-filter.select-mode .dropdown-option-filter').forEach(option => {
+                option.onclick = function () {
+                    const dropdown = this.closest('.custom-dropdown-filter');
+                    dropdown.querySelectorAll('.dropdown-option-filter').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    dropdown.classList.remove('active');
+                    // Aggiorna subito il testo visualizzato
+                    document.getElementById('applied-filter-text').textContent = `Massa: ${this.textContent}`;
+                };
+            });
+
+            // --- NUOVA LOGICA CENTRALIZZATA ---
+
+            async function eseguiAggiornamento(nuovaPaginaIndice = null) {
+                const params = new URLSearchParams();
+
+                // 1. Filtri Checkbox
+                document.querySelectorAll('.custom-dropdown-filter:not(:has(.select-mode))').forEach((dropdown, index) => {
+                    const selected = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked')).map(chk => chk.value);
+                    if (selected.length > 0) params.append(`filter${index + 1}`, selected.join(','));
+                });
+
+                // 2. Filtro Massa (Selezione singola)
+                const selectedMassa = document.querySelector('.dropdown-option-filter.selected');
+                if (selectedMassa && selectedMassa.dataset.value) params.append('massa', selectedMassa.dataset.value);
+
+                // 3. Modalità Visualizzazione (Compatto vs Esteso)
+                const mode = document.querySelector('.btn-action.mode.active')?.id === 'btn-extended' ? 'extended' : 'compact';
+                params.append('view_mode', mode);
+
+                // 4. Paginazione
+                const limit = document.getElementById('rows-per-page')?.value || '10';
+                params.append('limit', limit);
+
+                // Se non passiamo una pagina specifica, resettiamo alla 1 (es. quando si cambia filtro)
+                const paginaDaCaricare = nuovaPaginaIndice || 1;
+                params.append('p', paginaDaCaricare);
+
+                // Salviamo i parametri correnti globalmente per riferimento
+                window.sortSTR = `?${params.toString()}`;
+
+
+                // 5. Ordinamento (Dalla variabile globale sortSTR)
+                const currentSort = new URLSearchParams(window.sortSTR || "");
+                if (currentSort.has('sort')) params.append('sort', currentSort.get('sort'));
+                if (currentSort.has('order')) params.append('order', currentSort.get('order'));
+
+                // Esecuzione Fetch
+                const nomePagina = window.location.hash.replace('#', '') || 'ultimescoperte';
+                const finalUrl = `${nomePagina}.html?${params.toString()}`;
+
+                console.log("Richiesta URL:", finalUrl);
+
+                try {
+                    const risposta = await fetch(finalUrl);
+                    alert(finalUrl);
+                    if (!risposta.ok) throw new Error("Errore nel caricamento");
+                    const html = await risposta.text();
+
+                    document.getElementById('main-content').innerHTML = html;
+                    // --- DOPO IL CARICAMENTO: LEGGIAMO I PARAMETRI DALL'URL APPENA USATO ---
+                    const applicati = params; // Abbiamo già l'oggetto URLSearchParams
+                    // Qui ri-eseguiamo attivaJSfilter che leggerà il nuovo "total-rows-db"
+                    attivaOrdinamento();
+                    attivaJSfilter();
+                    // 1. Ripristino Checkbox (Filtro 1 e 2)
+                    // Se avevi filter1=confermato,candidato nell'URL, lo separiamo e selezioniamo i box
+                    ['filter1', 'filter2'].forEach(key => {
+                        if (applicati.has(key)) {
+                            const valori = applicati.get(key).split(',');
+                            valori.forEach(val => {
+                                const chk = document.querySelector(`input[value="${val}"]`);
+                                if (chk) chk.checked = true;
+                            });
+                        }
+                    });
+
+                    // 2. Ripristino Selezione Massa (Single Mode)
+                    if (applicati.has('massa')) {
+                        const val = applicati.get('massa');
+                        const opt = document.querySelector(`.dropdown-option-filter[data-value="${val}"]`);
+                        if (opt) {
+                            document.querySelectorAll('.dropdown-option-filter').forEach(o => o.classList.remove('selected'));
+                            opt.classList.add('selected');
+                            document.getElementById('applied-filter-text').textContent = `Massa: ${opt.textContent}`;
+                        }
+                    }
+
+                    // 3. Ripristino Tasti Mode (Compact / Extended)
+                    const mode = applicati.get('view_mode') || 'compact';
+                    document.querySelectorAll('.btn-action.mode').forEach(b => b.classList.remove('active'));
+                    if (mode === 'extended') {
+                        document.getElementById('btn-extended')?.classList.add('active');
+                    } else {
+                        document.getElementById('btn-compact')?.classList.add('active');
+                    }
+
+                    // 4. Ripristino Paginazione (Righe per pagina)
+                    if (applicati.has('limit')) {
+                        const limitSelect = document.getElementById('rows-per-page');
+                        if (limitSelect) limitSelect.value = applicati.get('limit');
+                    }
+
+                    // Riattiva i listener per il nuovo HTML
+                    attivaOrdinamento();
+                    attivaJSfilter();
+
+                    // Evidenzia freccia ordinamento se presente
+                    if (applicati.has('sort')) {
+                        evidenziaFreccia(applicati.get('sort'), applicati.get('order'));
+                    }
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            // --- AGGANCIO EVENTI AI TASTI ---
+
+            // Tasti Compatto / Esteso
+            document.querySelectorAll('#btn-extended, #btn-compact').forEach(btn => {
+                btn.onclick = function (e) {
+                    e.preventDefault();
+                    // Rimuovi active da entrambi
+                    document.querySelectorAll('.btn-action.mode').forEach(b => b.classList.remove('active'));
+                    // Aggiungi active a quello cliccato
+                    this.classList.add('active');
+
+                    // Ora esegui l'aggiornamento (che leggerà il tasto con classe active)
+                    eseguiAggiornamento();
+                };
+            });
+
+            // Tasto Applica Filtri
+            const btnApply = document.getElementById('btn-apply');
+            if (btnApply) btnApply.onclick = () => eseguiAggiornamento(1); // Torna alla pagina 1
+
+            // Cambio numero righe
+            const selectRows = document.getElementById('rows-per-page');
+            if (selectRows) selectRows.onchange = () => eseguiAggiornamento();
+
+            // --- LOGICA PAGINAZIONE DINAMICA ---
+            const totalRowsInput = document.getElementById('total-rows-db');
+            const rowsPerPageSelect = document.getElementById('rows-per-page');
+            const pageInfo = document.getElementById('page-info');
+
+            if (totalRowsInput && rowsPerPageSelect && pageInfo) {
+                const totalRows = parseInt(totalRowsInput.value);
+                const limit = parseInt(rowsPerPageSelect.value);
+
+                // Calcola il numero totale di pagine
+                const totalPages = Math.ceil(totalRows / limit) || 1;
+
+                // Recupera la pagina corrente dai parametri dell'URL (se presenti)
+                const urlParams = new URLSearchParams(window.sortSTR); // o usa una variabile globale per lo stato
+                let currentPage = parseInt(urlParams.get('p')) || 1;
+
+                // Aggiorna il testo visualizzato (es: "1 / 46")
+                pageInfo.textContent = `${currentPage} / ${totalPages}`;
+
+                // Configura i tasti
+                document.getElementById('page-first').onclick = () => eseguiAggiornamento(1);
+                document.getElementById('page-last').onclick = () => eseguiAggiornamento(totalPages);
+
+                document.getElementById('page-prev').onclick = () => {
+                    if (currentPage > 1) eseguiAggiornamento(currentPage - 1);
+                };
+
+                document.getElementById('page-next').onclick = () => {
+                    if (currentPage < totalPages) eseguiAggiornamento(currentPage + 1);
+                };
+                // Recuperiamo i bottoni
+                const btnFirst = document.getElementById('page-first');
+                const btnPrev = document.getElementById('page-prev');
+                const btnNext = document.getElementById('page-next');
+                const btnLast = document.getElementById('page-last');
+
+                if (totalRowsInput && rowsPerPageSelect && pageInfo) {
+                    const totalRows = parseInt(totalRowsInput.value);
+                    const limit = parseInt(rowsPerPageSelect.value);
+                    const totalPages = Math.ceil(totalRows / limit) || 1;
+
+                    // Recuperiamo la pagina corrente dai parametri dell'URL salvati in window.sortSTR
+                    const urlParams = new URLSearchParams(window.sortSTR);
+                    let currentPage = parseInt(urlParams.get('p')) || 1;
+
+                    // Aggiorna il testo 1 / 10
+                    pageInfo.textContent = `${currentPage} / ${totalPages}`;
+
+                    // --- FUNZIONE PER DISABILITARE I BOTTONI ---
+                    const setBtnDisabled = (btn, disabled) => {
+                        if (!btn) return;
+                        btn.disabled = disabled;
+                        // Aggiungiamo una classe CSS per feedback visivo (opzionale)
+                        if (disabled) {
+                            btn.classList.add('disabled');
+                            btn.style.opacity = "0.5";
+                            btn.style.cursor = "not-allowed";
+                            btn.onclick = null; // Rimuove l'evento
+                        } else {
+                            btn.classList.remove('disabled');
+                            btn.style.opacity = "1";
+                            btn.style.cursor = "pointer";
+                        }
+                    };
+
+                    // Logica di disattivazione
+                    setBtnDisabled(btnFirst, currentPage === 1);
+                    setBtnDisabled(btnPrev, currentPage === 1);
+                    setBtnDisabled(btnNext, currentPage === totalPages || totalPages === 0);
+                    setBtnDisabled(btnLast, currentPage === totalPages || totalPages === 0);
+
+                    // --- ASSEGNAZIONE EVENTI (Solo se non disabilitati) ---
+                    if (currentPage > 1) {
+                        btnFirst.onclick = () => eseguiAggiornamento(1);
+                        btnPrev.onclick = () => eseguiAggiornamento(currentPage - 1);
+                    }
+
+                    if (currentPage < totalPages) {
+                        btnNext.onclick = () => eseguiAggiornamento(currentPage + 1);
+                        btnLast.onclick = () => eseguiAggiornamento(totalPages);
+                    }
+                }
+            }
+
+            // Chiudi dropdown al click esterno
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.custom-dropdown-filter').forEach(d => d.classList.remove('active'));
+            }, { once: true }); // Usiamo once per evitare accumuli di listener
+        }
+
+
+        // Eventi
+        window.addEventListener('hashchange', gestisciNavigazione);
+        window.addEventListener('DOMContentLoaded', gestisciNavigazione);
+
+
+
+
+    </script>
+
+
+
+</head>
+
+<body class="fixen" translate="no">
+    <header id="myHeader" class="">
+        <a href="index.html" style="display: inline-block;">
+            <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+                <defs>
+                    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="2.5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+
+                <g filter="url(#glow)" transform="translate(-130, 0) scale(0.9)" transform-origin="400 200">
+                    <circle cx="357.3" cy="200.5" r="45" fill="#FFFFFF" opacity="0.9" />
+                    <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                        transform="rotate(35 357.3 200.5)" />
+                    <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                        transform="rotate(-35 357.3 200.5)" />
+                    <ellipse cx="357.3" cy="200.5" rx="250" ry="100" fill="none" stroke="#FFFFFF" stroke-width="1"
+                        opacity="0.4" />
+
+                    <circle cx="357.3" cy="200.5" r="50" fill="none" stroke="#FFFFFF" stroke-width="1">
+                        <animate attributeName="r" values="45;65;45" dur="3s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                </g>
+
+                <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="bold" fill="#FFFFFF"
+                    transform="translate(50, 0)">
+                    <text x="360" y="215" font-size="100" letter-spacing="2">ASTRO</text>
+                    <text x="360" y="275" font-size="65" font-weight="300" letter-spacing="12"
+                        opacity="0.8">PROJECT</text>
+                </g>
+
+                <line x1="330" y1="130" x2="330" y2="280" stroke="#FFFFFF" stroke-width="1" opacity="0.3" />
+            </svg>
+        </a>
+        <nav class="titpage">
+            <h1>Esopianeti</h1>
+            <div class="menu-items">
+                <div class="dropdown">
+                    <a href="#ultimescoperte">Ultime Scoperte</a>
+                    <div class="dropdown-content">
+                        <a href="#scoperte">Ultime Scoperte</a>
+                        <a href="#exoplanet">Archivio AI</a>
+                        <a href="#abitabilita">Abitabilità</a>
+                    </div>
+                </div>
+                <a href="#databaseAI">Database AI</a>
+                <a href="#abitabilita">Abitabilità</a>
+                <button id="openmenu">
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    <div id="main-content"></div>
+
+</body>
+
+</html>

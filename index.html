@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+
+
+
+
+    <title>AstroProject</title>
+    <script src="../js/astroprj.js"></script>
+   <link rel="stylesheet" href="../css/style.css">
+
+    <script>
+        window.console = window.console || function (t) { };
+    </script>
+
+
+
+</head>
+
+<body translate="no">
+    <header id="myHeader" class="">
+
+
+
+        <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+            <defs>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+            </defs>
+
+            <g filter="url(#glow)" transform="translate(-130, 0) scale(0.9)" transform-origin="400 200">
+                <circle cx="357.3" cy="200.5" r="45" fill="#FFFFFF" opacity="0.9" />
+                <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                    transform="rotate(35 357.3 200.5)" />
+                <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                    transform="rotate(-35 357.3 200.5)" />
+                <ellipse cx="357.3" cy="200.5" rx="250" ry="100" fill="none" stroke="#FFFFFF" stroke-width="1"
+                    opacity="0.4" />
+
+                <circle cx="357.3" cy="200.5" r="50" fill="none" stroke="#FFFFFF" stroke-width="1">
+                    <animate attributeName="r" values="45;65;45" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </g>
+
+            <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="bold" fill="#FFFFFF"
+                transform="translate(50, 0)">
+                <text x="360" y="215" font-size="100" letter-spacing="2">ASTRO</text>
+                <text x="360" y="275" font-size="65" font-weight="300" letter-spacing="12" opacity="0.8">PROJECT</text>
+            </g>
+
+            <line x1="330" y1="130" x2="330" y2="280" stroke="#FFFFFF" stroke-width="1" opacity="0.3" />
+        </svg>
+
+        <nav>
+            <div class="dropdown">
+                <a href="#esopianeti">Esopianeti</a>
+                <div class="dropdown-content">
+                    <a href="#scoperte">Ultime Scoperte</a>
+                    <a href="exoplanet.html">Archivio AI</a>
+                    <a href="#abitabilita">Abitabilità</a>
+                </div>
+            </div>
+            <a href="#sistema">Sistema Solare</a>
+            <a href="#spazio">Spazio</a>
+            <a href="#futuro">Futuro</a>
+            <button id="openmenu">
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <div id="page" class="">
+        <section id="esopianeti" style="background-image:url(../img/exoplanet.jpg)">
+            <h1>Esopianeti</h1>
+
+            <div style="position: relative; z-index: 2; max-width: 1200px; margin: 0px auto; padding: 0px; width: 100%;">
+                <article class="cards">
+                    <a href="exoplanet.html" class="card-link">
+                    <div class="previewCard">
+                        <img src="../img/article1.jpg" class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Esplorazione</div>
+                            <div class="title">Ultime Scoperte</div>
+                            <div class="description">
+                                <p>Ultime Scopertedi esopianeti.</p>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="exoplanet.html" class="card-link">
+                    <div class="previewCard">
+                        <img src="../img/article2.jpg" class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Esopianeti</div>
+                            <div class="title">Database AI</div>
+                            <div class="description">
+                                <p>Esplora le ricostruzioni generate dall'intelligenza artificiale dei mondi distanti.</p>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                    <a href="exoplanet.html" class="card-link">
+                    <div class="previewCard">
+                        <img src="../img/article3.jpg" class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Esopianeti</div>
+                            <div class="title">Abitabilità</div>
+                            <div class="description">
+                                <p>Condizioni per la vita su esopianeti e metordi di rilevazione</p>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <section id="sistema" style="background-image:url(../img/sistema.jpg)">
+            <h1>Sistema Solare</h1>
+        </section>
+        <section id="spazio" style="background-image:url(../img/space.jpg)">
+            <h1>Spazio</h1>
+        </section>
+        <section id="futuro" style="background-image:url(../img/future.jpg)">
+            <h1>Futuro</h1>
+        </section>
+    </div>
+    <a id="fixedlink" target="_blank" rel="nofollow noopener" href="https://">» See this solution in real
+        usage</a>
+
+
+
+
+</body>
+
+</html>

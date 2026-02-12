@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" type="image/png"
+        href="https://cpwebassets.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png" />
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+    <link rel="icon" type="image/x-icon"
+        href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" />
+    <link rel="mask-icon" type="image/x-icon"
+        href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg"
+        color="#111" />
+    <script
+        src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+
+
+    <title>AstroProject</title>
+
+    <link rel="canonical" href="https://codepen.io/codesuey/pen/abPEyjo">
+    <link rel="stylesheet" href="https://public.codepenassets.com/css/normalize-5.0.0.min.css">
+
+
+
+    <style>
+        body {
+            line-height: 1.6;
+            color: #fff;
+            background: #000;
+            font-size: 18px;
+            font-weight: 400;
+            font-family: "-apple-system", "BlinkMacSystemFont", "Roboto", "Helvetica Neue", sans-serif !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+
+        }
+
+        body.stop {
+            overflow: hidden;
+        }
+
+        #page {
+            position: relative;
+            transition: 1s all ease-in-out;
+        }
+
+        #page.menuopen {
+            opacity: 0.6;
+            filter: blur(20px);
+            transform: scale(1.2);
+        }
+
+        section {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 80px 50px;
+            justify-content: flex-start;
+            align-items: center;
+            background: #222;
+            color: #fff;
+            position: relative;
+        }
+
+        section:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #000;
+            opacity: 0.5;
+            height: 100%;
+            width: 100%;
+        }
+
+        section h1 {
+            font-size: 80px;
+            margin: 0 0 20px 0;
+            z-index: 2;
+            position: relative;
+            text-align: center;
+        }
+
+        header {
+            z-index: 99999;
+            position: relative;
+        }
+
+        header #logo {
+            position: fixed;
+            top: 10px;
+            left: 0;
+            right: 0;
+            width: 250px;
+            height: auto;
+            margin: 0 auto;
+            opacity: 1;
+            transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+        }
+
+        header nav {
+            display: flex;
+            height: 100px;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            left: 0;
+            right: 0;
+            width: 500px;
+            margin: 0 auto;
+            top: 120px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 200px;
+            z-index: 9;
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 1s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            display: block;
+            padding: 10px 20px;
+            line-height: 1;
+            font-size: 15px;
+            letter-spacing: 2px;
+            text-transform: lowercase;
+            transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.6s;
+        }
+
+        header nav button {
+            -webkit-appearance: none;
+            background: rgba(0, 0, 0, 0.3);
+            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: absolute;
+            z-index: 99;
+            left: 0;
+            margin: auto;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 100%;
+            outline: 0;
+            border: 0;
+            cursor: pointer;
+            transition: 0.3s all cubic-bezier(0.075, 0.82, 0.165, 1) 0.2s;
+            transform: scale(0);
+        }
+
+        header nav button span {
+            width: 40%;
+            background: #fff;
+            height: 2px;
+            display: block;
+            margin: 5px auto;
+            transform: scalex(0);
+            transition: 0.6s transform cubic-bezier(0.075, 0.82, 0.165, 1) 0s, 0.3s margin ease-in 0s;
+        }
+
+        header nav button:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        header nav button:hover span {
+            margin: 10px auto;
+        }
+
+        header.sticky #logo {
+            top: 0;
+            transform: scale(0.8);
+            opacity: 0;
+            transition-delay: 0.5s;
+        }
+
+        header.sticky nav {
+            top: 20px;
+            padding: 0;
+            width: 90px;
+            height: 90px;
+            transition-delay: 0.5s;
+        }
+
+        header.sticky nav button {
+            transform: scale(1);
+            transition-delay: 0.6s;
+        }
+
+        header.sticky nav button span {
+            transform: scalex(1);
+            transition: 0.6s transform cubic-bezier(0.075, 0.82, 0.165, 1) 0.8s, 0.3s margin ease-in 0s;
+        }
+
+        header.sticky nav a {
+            padding: 0;
+            opacity: 0;
+            letter-spacing: 0px;
+            transform: scale(0.3);
+            transition-delay: 0.2s;
+        }
+
+        #fixedlink {
+            position: fixed;
+            bottom: 0;
+            z-index: 9999;
+            right: 0;
+            left: 0;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            padding: 20px;
+        }
+
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .previewCard {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 3 / 4;
+            /* Formato verticale tipico delle carte */
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            /* Spinge il testo in basso */
+            transition: transform 0.4s ease;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .previewCard:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .backdrop {
+            position: absolute;
+            object-fit: cover;
+            pointer-events: none;
+            user-select: none;
+            width: 100%;
+            height: 100%;
+
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+
+        .previewCard:hover .backdrop {
+            transform: scale(1.1);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            /* Sfoca leggermente lo sfondo dietro il testo */
+
+            /*width: 100%;*/
+            box-sizing: border-box; /* Forza il padding a stare DENTRO il 100% */
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .category {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00d4ff;
+            /* Colore d'accento spaziale */
+            margin-bottom: 5px;
+        }
+
+        .description p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            opacity: 0.8;
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            /* Taglia il testo dopo 2 righe per pulizia */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        #esopianeti {
+            padding-top: 220px !important;
+            /* Aumenta lo spazio superiore solo qui */
+        }
+    </style>
+
+    <script>
+        window.console = window.console || function (t) { };
+    </script>
+
+
+
+</head>
+
+<body translate="no">
+    <header id="myHeader" class="">
+
+
+
+        <svg id="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400">
+            <defs>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+            </defs>
+
+            <g filter="url(#glow)" transform="translate(-130, 0) scale(0.9)" transform-origin="400 200">
+                <circle cx="357.3" cy="200.5" r="45" fill="#FFFFFF" opacity="0.9" />
+                <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                    transform="rotate(35 357.3 200.5)" />
+                <ellipse cx="357.3" cy="200.5" rx="200" ry="70" fill="none" stroke="#FFFFFF" stroke-width="3"
+                    transform="rotate(-35 357.3 200.5)" />
+                <ellipse cx="357.3" cy="200.5" rx="250" ry="100" fill="none" stroke="#FFFFFF" stroke-width="1"
+                    opacity="0.4" />
+
+                <circle cx="357.3" cy="200.5" r="50" fill="none" stroke="#FFFFFF" stroke-width="1">
+                    <animate attributeName="r" values="45;65;45" dur="3s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite" />
+                </circle>
+            </g>
+
+            <g font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="bold" fill="#FFFFFF"
+                transform="translate(50, 0)">
+                <text x="360" y="215" font-size="100" letter-spacing="2">ASTRO</text>
+                <text x="360" y="275" font-size="65" font-weight="300" letter-spacing="12" opacity="0.8">PROJECT</text>
+            </g>
+
+            <line x1="330" y1="130" x2="330" y2="280" stroke="#FFFFFF" stroke-width="1" opacity="0.3" />
+        </svg>
+
+        <nav>
+            <a href="#esopianeti">Esopianeti</a>
+            <a href="#sistema" style="white-space: nowrap;">Sistema Solare</a>
+            <a href="#spazio">Spazio</a>
+            <a href="#futuro">Futuro</a>
+            <button id="openmenu">
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <div id="page" class="">
+        <section id="esopianeti" style="background-image:url(../img/exoplanet.jpg)">
+            <h1>Esopianeti</h1>
+
+
+
+            <div
+                style="position: relative; z-index: 2; max-width: 1200px; margin: 0px auto; padding: 0px; width: 100%;">
+                <article class="cards">
+                    <div class="previewCard">
+                        <img src="../img/article1.jpg" class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Esopianeti</div>
+                            <div class="title">Database AI</div>
+                            <div class="description"><p>Esplora le ricostruzioni generate dall'intelligenza artificiale dei mondi distanti.</p></div>
+                        </div>
+                    </div>
+
+                    <div class="previewCard">
+                        <img src="../img/article2.jpg"
+                            class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Esplorazione</div>
+                            <div class="title">Sistemi Binari</div>
+                            <div class="description"><p>Analisi della vita possibile in sistemi con due o più stelle.</p></div>
+                        </div>
+                    </div>
+
+
+                    <div class="previewCard">
+                        <img src="../img/article3.jpg"
+                            class="backdrop" />
+                        <div class='content'>
+                            <div class="category">Tecnologia</div>
+                            <div class="title">Telescopi</div>
+                            <div class="description"><p>l futuro dell'osservazione spaziale con i nuovi sensori quantistici.</p></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+        </section>
+
+
+
+
+
+
+
+        </section>
+        <section id="sistema" style="background-image:url(../img/sistema.jpg)">
+            <h1>Sistema Solare</h1>
+        </section>
+        <section id="spazio" style="background-image:url(../img/space.jpg)">
+            <h1>Spazio</h1>
+        </section>
+        <section id="futuro" style="background-image:url(../img/future.jpg)">
+            <h1>Futuro</h1>
+        </section>
+    </div>
+    <a id="fixedlink" target="_blank" rel="nofollow noopener" href="https://">» See this solution in real
+        usage</a>
+
+    <script id="rendered-js">
+        document.addEventListener('DOMContentLoaded', function () {
+            var header = document.getElementById('myHeader');
+            var page = document.getElementById('page');
+            var openMenuButton = document.getElementById('openmenu');
+
+            window.addEventListener('scroll', function () {
+                page.classList.remove('menuopen');
+                if (window.scrollY >= 100) {
+                    header.classList.add('sticky');
+                } else {
+                    header.classList.remove('sticky');
+                }
+            });
+
+            // Event listener to remove the sticky class when the button is clicked
+            openMenuButton.addEventListener('click', function () {
+                header.classList.remove('sticky');
+                page.classList.add('menuopen');
+            });
+
+            var links = document.querySelectorAll('a[href^="#"]');
+
+            links.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    // Prevent the default action
+                    event.preventDefault();
+
+                    // Get the target element
+                    var targetId = this.getAttribute('href');
+                    var targetElement = document.querySelector(targetId);
+
+                    // Smooth scroll to target
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+
+                    }
+                });
+            });
+        });
+        //# sourceURL=pen.js
+    </script>
+
+
+</body>
+
+</html>
